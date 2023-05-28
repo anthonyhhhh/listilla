@@ -1,0 +1,34 @@
+.wrong{
+    border: 2px solid red;
+}
+
+input{
+    outline: none;
+}
+
+.correct{
+    border: 2px solid rgb(168, 247, 50)
+}
+.info-text{
+    display: none;
+}
+
+.deleteicon {
+    width: 2rem;
+    height: 2rem;
+}
+
+.editicon {
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+}
+
+li {
+    display: flex;
+    gap: 1rem;
+}
+
+.show{
+    display: block;
+}
