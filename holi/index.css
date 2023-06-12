@@ -46,7 +46,7 @@ li {
 }
 .edit-icon:hover{
     cursor: pointer;
-    background-color: rgb(254, 243, 219);
+    background-color: rgb(10, 73, 123);
 }
 .delete-icon{
     height: 1.3rem;
