@@ -1,27 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Contactos</title>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <form id="form">
-        <div class="input-container">
-            <input type="text" id="email-input" class="hola" placeholder="ejemplo@gmail.com" autocomplete="off">
-            <p class="info-text">El email tiene que ser valido</p>
-        </div>
-        <div class="input-container">
-            <input type="text" id="phone-input" class="hola" placeholder="04148238421" autocomplete="off">
-            <p class="info-text">Tiene que ser un numero venezolano</p>
-        </div>
-        <button id="form-btn" disabled>Agregar</button>
-    </form>
-
-    <ul id="list">
-    </ul>
+    <main id="main-container">
+        <h1 id="main-title">listilla de contactos</h1>
+        <form id="form">
+            <div class="form-name-input">
+                <input id="name-input" placeholder="Ingresar nombre y apellido" autocomplete="off">
+                <p class="info-text">el nombre debe contener minimo 2 caracteres<br>no puede tener mas de 30 caracteres  <br>los simbolos y numeros no estan permitidos</p>
+            </div>
+            <div class="form-phone-input">
+                <input id="phone-input" placeholder= "0412222222" autocomplete="off">
+                <p class="info-text">el número debe ser venezolano</p>
+            </div>    
+            <button class="form-btn" disabled>Enviar</button>
+        </form>
+        <ul id="list"> 
+        </ul>
+    </main>    
     <script src="index.js"></script>
 </body>
 </html>

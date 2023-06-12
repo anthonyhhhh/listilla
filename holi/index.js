@@ -1,130 +1,135 @@
-const emailInput = document.querySelector('#email-input');
+const nameInput = document.querySelector('#name-input');
 const phoneInput = document.querySelector('#phone-input');
-const formBtn = document.querySelector('#form-btn')
-const form = document.querySelector('#form')
+const list = document.querySelector('#list');
+const formBtn = document.querySelector('.form-btn');
+
 //regex
+const PHONE_REGEX = /^[0](412|414|416|426|424|212)[0-9]{7}$/;
+const NAME_REGEX = /^([A-Za-z ]){2,30}$/;
 
-const EMAIL_REGEX = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-const PHONE_REGEX = /^[0](412|414|416|426|424|212)[0-9]{7}$/
-//validacion
-
-let emailValidation = false;
+//validaciones
+let nameValidation = false;
 let phoneValidation = false;
+let miniNameValidation = false;
+let miniPhoneValidation = false;
 
-//function
-
-const validateInput = (input, regexValidation) =>{
-    const infoText = input.parentElement.children[1]; // para seleccionar elemento hijo en especifico
-    formBtn.disabled = emailValidation && phoneValidation? false : true;
-
-    if (input.value === '') {
-        input.classList.remove('correct')
-        input.classList.remove('wrong')
-        infoText.classList.remove('show')
-    }
-    else if (regexValidation) {
-        input.classList.add('correct')
-        input.classList.remove('wrong')
-        infoText.classList.remove('show')
+const inputValidation = (input, regexValidation) =>{
+    const infoText = input.parentElement.children[1];
+    formBtn.disabled = nameValidation && phoneValidation? false:true;
+    if (input.value === ''){
+        input.classList.remove('wrong');
+        input.classList.remove('correct');
+        infoText.classList.remove('show');
+    }else if(regexValidation){
+        input.classList.add('correct');
+        input.classList.remove('wrong');
+        infoText.classList.remove('show');
     }else{
-        input.classList.remove('correct')
-        input.classList.add('wrong')
-        infoText.classList.add('show')
+        input.classList.add('wrong');
+        input.classList.remove('correct');
+        infoText.classList.add('show');
     }
 };
-
-emailInput.addEventListener('input', e => {
-    emailValidation = EMAIL_REGEX.test(emailInput.value);
-    validateInput(emailInput, emailValidation)
+nameInput.addEventListener('input', e =>{
+    nameValidation = NAME_REGEX.test(nameInput.value);
+    inputValidation(nameInput,nameValidation);
 });
-
-phoneInput.addEventListener('input', e => {
+phoneInput.addEventListener('input', e =>{
     phoneValidation = PHONE_REGEX.test(phoneInput.value);
-    validateInput(phoneInput, phoneValidation)
+    inputValidation(phoneInput, phoneValidation);
 });
-
-form.addEventListener('submit', e => {
+form.addEventListener('submit', e =>{
     e.preventDefault();
-    //crear elemento de la lista
-    const li = document.createElement('li');
-    //creo contenido del li dependiendo de lo que escribio el usuario en los inputs
+    const li = document.createElement('Li');
+    li.classList.add('contact-list');
     li.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="deleteicon">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-</svg>
-        <p>${emailInput.value}</p>
-        <input type = "text" value = "${phoneInput.value}" readonly>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="editicon">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-</svg>
-        `;
-    //agrego el elemento a la lista
+        <div id = "borrar" class = "icons">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="delete-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </div>
+        <div class = "inputs">
+            <input id = "name" class = "contact-list-input" type = "text" value = "${nameInput.value}" readonly autocomplete = "off">
+            <input id = "phone" class = "contact-list-input" type = "text" value = "${phoneInput.value}" readonly autocomplete = "off">
+        </div>
+        <div id = "editar" class = "icons">        
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="edit-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+            </svg>
+        </div>
+        `;   
     list.append(li);
-    //limpio los inputs
-    emailInput.value='';
-    phoneInput.value='';
-
-    validateInput(emailInput);
-    validateInput (phoneInput);
-    emailValidation=false;
-    phoneValidation=false;
+    localStorage.setItem('listaContactos', list.innerHTML);
+    nameInput.value = '';
+    phoneInput.value = '';
+    inputValidation(nameInput);
+    inputValidation(phoneInput);
+    nameValidation = false;
+    phoneValidation = false;
     formBtn.disabled = true;
-    //guardar en locarStorage (navegador)
-    localStorage.setItem('listaContactos', list.innerHTML);
-
 });
-
-list.addEventListener('click', e => {
-    if (e.target.closest('.deleteicon')) {
-    e.target.closest('.deleteicon').parentElement.remove();
-    localStorage.setItem('listaContactos', list.innerHTML);
+list.addEventListener('click', (e) => {
+    if (e.target.closest('.delete-icon')) {
+      const li = e.target.closest('li');
+      li.remove();
+      localStorage.setItem('listaContactos', list.innerHTML)
     }
-    
-if (e.target.closest('.editicon')) {
-    // selecciona el icono de editar
-    const editicon = e.target.closest('.editicon');
-    // selecciona el input
-    const editInput = editicon.parentElement.children[2];
-    // define mi condicional usando una clasee llamada editando para saber el estado del boton
-    if (editicon.classList.contains('editando')) {
-        // cuando edita
-        // remueve la clase de editando para indicar que esta guardando los cambios
-        editicon.classList.remove('editando');
-        // guardo el numero de valor del input
-        editInput.setAttribute('value',editInput.value)
-        // remuevo clase editando para poder escribir en el input
-        editInput.setAttribute('readonly','true')
-        editInput.classList.add('editing')
-        const end = editInput.value.length;
-        editInput.setSelectionRange(end, end);
-        editInput.focus()
-        // coloca el icono de editar
-        editicon.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="editicon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-        </svg>
-        `;
-        // guardo en local storage
-        localStorage.setItem('listaContactos', list.innerHTML);
-    } 
-    
-    else {
-        // nueva clase editando para el boton
-        editicon.classList.add('editando')
-        // remuevo el atributo readonly para poder escribir en el input
-        editInput.removeAttribute('readonly');
-        //  cambio el icono para indicarle al usuario q esta editando
-        editicon.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="editicon">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-      </svg>
-        `;
+  if (e.target.closest('.edit-icon') || e.target.querySelector('.edit-icon')){
+    const li = e.target.closest('li');
+    const inputs = li.children[1];
+    const input = inputs.children[0];
+    const phone = inputs.children[1];
+    const editIcon = e.target.closest('.edit-icon');
+    function validation() {
+        const editValidation=(miniInput,miniRegexValidation)=>{
+            if (miniRegexValidation) {
+                miniInput.classList.add('correct')
+                miniInput.classList.remove('wrong')
+                if (!input.classList.contains('wrong') && !phone.classList.contains('wrong')){
+                    editIcon.classList.remove('hide')
+                }
+            }else{
+                miniInput.classList.remove('correct')
+                miniInput.classList.add('wrong')
+                editIcon.classList.add('hide')
+            }
         }
-}
-
+        input.addEventListener('input', e =>{
+            miniNameValidation = NAME_REGEX.test(input.value);
+            editValidation(input,miniNameValidation);
+        });
+        
+        phone.addEventListener('input', e =>{
+            miniPhoneValidation = PHONE_REGEX.test(phone.value);
+            editValidation(phone, miniPhoneValidation);
+        })
+        input.setAttribute('value', input.value)
+        phone.setAttribute('value', phone.value)
+        }    
+    if (editIcon.classList.contains('editando')){
+        editIcon.classList.remove('editando');
+        validation();
+        input.classList.remove('wrong')
+        input.classList.remove('correct')
+        phone.classList.remove('wrong')
+        phone.classList.remove('correct')
+        input.setAttribute('readonly',true);
+        phone.setAttribute('readonly',true);
+        editIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />`;
+        localStorage.setItem('listaContactos',list.innerHTML)
+      }else{
+        const end = input.value.length;
+        input.setSelectionRange(end, end);
+        input.focus();
+        editIcon.classList.add('editando');
+        input.removeAttribute('readonly');
+        phone.removeAttribute('readonly');
+        validation();
+        editIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />`;
+      };
+  }
 });
-
 (()=>{
     const localList = localStorage.getItem('listaContactos');
     list.innerHTML = localList
-})()
+})();
